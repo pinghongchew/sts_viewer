@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title></title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="icon" href="images/favicon.png" />
+</head>
+
+<body>
+    <textarea id="textarea-input" rows="30" cols="50"></textarea>
+    <button onclick="formatInput()">Convert</button>
+    <textarea id="textarea-output" rows="40" cols="60"></textarea>
+    <script src="js/scripts.js"></script>
+</body>
+
+<script type="text/javascript">
+    let eInputText = document.getElementById("textarea-input");
+    let eOutputText = document.getElementById("textarea-output");
+    
+    // eInputText.addEventListener("change", onInputTextChange, false);
+    function formatInput() {
+        let strInputText = eInputText.value;
+        let arrInputText = strInputText.split('"');
+        arrInputText = removeUnwantedIndex(arrInputText);
+        strInputText = buildStringFromArray(arrInputText);
+        strInputText = convertAsciiHexToText(strInputText);
+        // console.log(strInputText);
+        eOutputText.value = strInputText;
+    }
+
+    function removeUnwantedIndex(arrInput) {
+        for (let i = (arrInput.length - 1); 0 < (i + 1); i--) {
+            if (arrInput[i].length == 0) {
+                arrInput.splice(i, 1);
+            }
+            else {
+                let arrNewLine = arrInput[i].split("\n");
+                if (arrNewLine.length > 1) {
+                    arrInput.splice(i, 1);
+                }
+            }
+        }
+        return arrInput;
+    }
+
+    function buildStringFromArray(arrInput) {
+        let strOutput = "";
+        for (const strItem of arrInput) {
+            strOutput = strOutput + strItem;
+        }
+        return strOutput;
+    }
+
+    function convertAsciiHexToText(strInput) {
+        strInput = strInput.replace(/\\x([0-9a-f]{2})/ig, function(_, pair) {
+            return String.fromCharCode(parseInt(pair, 16));
+        })
+        return strInput;
+    }
+</script>
+
+</html>
